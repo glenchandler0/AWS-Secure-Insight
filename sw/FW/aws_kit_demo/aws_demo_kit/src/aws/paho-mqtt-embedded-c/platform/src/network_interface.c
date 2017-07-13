@@ -155,6 +155,8 @@ int network_socket_connect(SOCKET *network_socket, uint32_t address, uint16_t po
 	socket_address.sin_port        = _htons(port);
 
 	ret = connect(*network_socket, (struct sockaddr*)&socket_address, sizeof(struct sockaddr));
+
+
 	if (ret != SOCK_ERR_NO_ERROR)
 		return ret;	
 

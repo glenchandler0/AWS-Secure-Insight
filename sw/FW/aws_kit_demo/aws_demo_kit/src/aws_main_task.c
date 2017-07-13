@@ -110,9 +110,13 @@ int aws_main_init_kit(t_aws_kit* kit)
 
 		kit->errState = AWS_EX_NONE;
 
+#if 0
 		/* Initialize CryptoAuthLib to communicate with ATECC508A over I2C interface. */
 		cfg_ateccx08a_i2c_default.atcai2c.slave_address = DEVICE_I2C;
 		atcab_init( &cfg_ateccx08a_i2c_default );
+
+		//Currently not communicating with non-aws crypto board is not being communicated with correctly
+		//Currently comment this out because we do not need it for simple MQTT demo 999
 
 		/* Check for personalization state of configuration & data zone. */
 		ret = atcab_is_locked(LOCK_ZONE_CONFIG, &lockstate);
@@ -163,6 +167,13 @@ int aws_main_init_kit(t_aws_kit* kit)
 			ret = AWS_E_CRYPTO_FAILURE;
 			break;
 		}
+#else
+
+	//Added clause here to hardcode clientID, because it is normally fetched from atecc 999
+	strcpy(kit->user.clientID, "m1Test");
+	kit->user.clientIDLen = 6;
+
+#endif
 
 		/* initialize IOs bewteen ATSAMG55 and ATWINC1500. */
 		ret = nm_bsp_init();
@@ -206,7 +217,9 @@ int aws_main_build_certificate(t_aws_kit* kit)
 	cert.signer_pubkey= (uint8_t*)malloc(ATCERT_PUBKEY_SIZE);
 	if (cert.signer_pubkey == NULL) goto free_cert;
 
+	//999 Signer
 	/* Build signer certificate */
+	//Signer certificate convert to DER using built in functions
 	ret = atca_tls_build_signer_cert(&cert);
 	if (ret != ATCA_SUCCESS) {
 		ret = AWS_E_CRYPTO_CERT_FAILURE;
@@ -224,6 +237,7 @@ int aws_main_build_certificate(t_aws_kit* kit)
 	cert.device_pubkey= (uint8_t*)malloc(ATCERT_PUBKEY_SIZE);
 	if (cert.device_pubkey == NULL) goto free_cert;
 
+	//999 Device also will be converted to DER
 	/* Build device certificate. */
 	ret = atca_tls_build_device_cert(&cert);
 	if (ret != ATCA_SUCCESS) {
@@ -231,6 +245,7 @@ int aws_main_build_certificate(t_aws_kit* kit)
 		AWS_ERROR("Failed to build device certificate!(%d)", ret);
 		goto free_cert; 
 	}
+
 
 	/* Copy both PEM certificates to corresponding fields to be used for TLS library. */
 	kit->cert.signerCertLen = cert.signer_pem_size;
@@ -303,6 +318,10 @@ int aws_main_check_kit_state(t_aws_kit* kit)
 
 	do {
 
+	//AWS using their byte stream to set variables, a lot of which are set from the GUI, on the cryptoauth
+	//One last check for the cryptoauth to be working happens, then variables are set
+#if 0
+
 		memset(userData, 0x00, sizeof(userData));
 		/* Read a bunch of user data from slot8 of ATECC508A. */
 		ret = atcab_read_bytes_zone(ATCA_ZONE_DATA, TLS_SLOT8_ENC_STORE, 0x00, userData, sizeof(userData));
@@ -337,6 +356,23 @@ int aws_main_check_kit_state(t_aws_kit* kit)
 		memcpy(kit->user.psk, &userData[AWS_USER_DATA_OFFSET_PSK], kit->user.pskLen);
 		memcpy(kit->user.host, &userData[AWS_USER_DATA_OFFSET_HOST], kit->user.hostLen);
 		memcpy(kit->user.thing, &userData[AWS_USER_DATA_OFFSET_THING], kit->user.thingLen);
+	
+#endif
+		//kit->user.<value> must be set as a certain string that fits the lengths of parameters
+		//ssid: 32B, psk: 32B, host: 64B, thing: 32B ---Character arrays 999	
+		uint8_t m1Ssid[AWS_WIFI_SSID_MAX] = "mediumone_2.4GHz";
+		strcpy(kit->user.ssid, m1Ssid);
+		kit->user.ssidLen = 16;
+		uint8_t m1Psk[AWS_WIFI_PSK_MAX] = "6e6496cd";
+		strcpy(kit->user.psk, m1Psk);
+		kit->user.pskLen = 8;
+#define M1_HOST "ladder.mediumone.com"
+		uint8_t m1Host[AWS_HOST_ADDR_MAX] = M1_HOST;
+		strcpy(kit->user.host, m1Host);
+		kit->user.hostLen = strlen(M1_HOST);
+		uint8_t m1Thing[AWS_THING_NAME_MAX] = "m1Thing";
+		strcpy(kit->user.thing, m1Thing);
+		kit->user.thingLen = 7;
 
 		/* Set button state with previously saved state to keep it. */
 		for (uint8_t i = 0; i < AWS_KIT_BUTTON_MAX; i++) {
@@ -365,6 +401,8 @@ int aws_main_check_kit_state(t_aws_kit* kit)
 		}
 
 		/* Build signer & device certificates to be set for TLS library. */
+		//999 Should not be if'd out. Control moves through here to set the certificates
+
 		ret = aws_main_build_certificate(kit);
 		if (ret != AWS_E_SUCCESS) break;
 #ifdef AWS_KIT_DEBUG

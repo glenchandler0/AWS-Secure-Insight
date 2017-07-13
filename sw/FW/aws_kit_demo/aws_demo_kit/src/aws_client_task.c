@@ -110,10 +110,22 @@ int aws_client_init_mqtt_client(t_aws_kit* kit)
 		memset(kit->socket, 0, sizeof(SOCKET));
 		MQTTClientInit(&kit->client, &mqtt_network, AWS_MQTT_CMD_TIMEOUT_MS, kit->buffer.mqttTxBuf, 
 					   sizeof(kit->buffer.mqttTxBuf), kit->buffer.mqttRxBuf, sizeof(kit->buffer.mqttRxBuf));
+
+		//Need to set MQTT username and pass here, as MQTT string. Let it initialize first, then set variables that you need to. 999
+		strcpy(options.username.cstring, "d4JzTtGTSqs/6eqAY8te0B8");
+		strcpy(options.username.lenstring.data, "d4JzTtGTSqs/6eqAY8te0B8");
+		options.username.lenstring.len = 23;
+
+		strcpy(options.password.cstring, "B5OPOBXJZKAPFJQZV5SVADRQGVSWIMJYMM4WKNJYGQ3TAMBQ/glen8716");
+		strcpy(options.password.lenstring.data, "B5OPOBXJZKAPFJQZV5SVADRQGVSWIMJYMM4WKNJYGQ3TAMBQ/glen8716");
+		options.password.lenstring.len = 57;
 					   
 		/* Connect to AWS IoT over TLS handshaking with ECDHE-ECDSA-AES128-GCM-SHA256 cipher suite. 
 		   If TLS connection fails by AWS IoT during JITR, then return normal failure for the retry. */
-		ret = aws_client_mqtt_connect(kit, (const char *)kit->user.host, AWS_IOT_MQTT_PORT,
+
+		//Check through this call for TLS and JITR to disable 999
+		int m1Port = 61613; //In the aws_client_mqtt_connect() call, m1Port was originally AWS_IOT_MQTT_PORT
+		ret = aws_client_mqtt_connect(kit, (const char *)kit->user.host, m1Port,
 									  AWS_NET_CONN_TIMEOUT_MS, aws_client_net_tls_cb);
 		if (ret != SUCCESS) {
 			ret = AWS_E_NET_CONN_FAILURE;
@@ -122,10 +134,12 @@ int aws_client_init_mqtt_client(t_aws_kit* kit)
 		}
 
 		/* If both JITR and TLS session establishment have been successfully made, Send MQTT CONN packet. */
+		//Disable here to leave as only MQTT CONN packet
 		options.keepAliveInterval = AWS_IOT_KEEP_ALIVE_SEC;
 		options.cleansession = 1;
 		/* Client ID represents a serial number of ATECC508A. */
 		options.clientID.cstring = (const char*)kit->user.clientID;
+
 		ret = MQTTConnect(&kit->client, &options);
 		if (ret != SUCCESS) {
 			ret = AWS_E_NET_TLS_FAILURE;
@@ -227,8 +241,11 @@ int aws_client_mqtt_connect(t_aws_kit* kit, const char *host, uint16_t port,
 			wolfSSL_CTX_free(kit->tls.context);
 		
 		wolfSSL_Cleanup();
-		
+	
+//Quick test 999	
+#if 0
 		network_socket_disconnect(kit->socket);
+#endif
 	}
 	
 	return ret;
@@ -339,6 +356,9 @@ int aws_client_net_tls_cb(t_aws_kit* kit)
 		wolfSSL_Debugging_OFF();
 		delay_ms(500);
 #endif
+
+//This was previously if'd out 999
+
 		/* Initialize SSL context. */
 		kit->tls.context = wolfSSL_CTX_new(wolfTLSv1_2_client_method());
 		if (kit->tls.context == NULL) {
@@ -632,6 +652,7 @@ int aws_client_mqtt_wait_msg(t_aws_kit* kit)
  */
 void aws_client_state_machine(t_aws_kit* kit)
 {
+	//Not reaching here 999
 	int ret = AWS_E_SUCCESS;
 	static bool errorNoti = false;
 	static uint8_t retryDelay = 0;

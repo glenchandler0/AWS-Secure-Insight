@@ -528,6 +528,17 @@ sint8 m2m_wifi_connect_sc(char *pcSsid, uint8 u8SsidLen, uint8 u8SecType, void *
 	}
 	if((u8SsidLen<=0)||(u8SsidLen>=M2M_MAX_SSID_LEN))
 	{
+		//999 Check what the length issue is on SSID
+		if(u8SsidLen <= 0)
+		{
+			//if(1)
+				//printf()
+		}
+		if(u8SsidLen >= M2M_MAX_SSID_LEN)
+		{
+			//if(1)
+				//ioport_set_pin_level(EXT3_PIN_7, IOPORT_PIN_LEVEL_HIGH);
+		}
 		M2M_ERR("SSID LEN INVALID\n");
 		ret = M2M_ERR_FAIL;
 		goto ERR1;
