@@ -25,7 +25,7 @@
  * http://www.wolfssl.com
  */
 
-
+ #include "mpu_wrappers.h"
 
 #ifdef HAVE_CONFIG_H
     #include <config.h>
@@ -3422,11 +3422,17 @@ int GrowInputBuffer(WOLFSSL* ssl, int size, int usedLength)
        while (align < hdrSz)
            align *= 2;
     }
+	//size_t freeHeapSize = xPortGetFreeHeapSize();
+	//char heapSizeMessage[60];
+
+	//sprintf(heapSizeMessage, "Free heap remaining: %d\n", freeHeapSize);
+	//WOLFSSL_MSG(heapSizeMessage);
     tmp = (byte*) XMALLOC(size + usedLength + align, ssl->heap,
                           DYNAMIC_TYPE_IN_BUFFER);
     WOLFSSL_MSG("growing input buffer\n");
 
-    if (!tmp) return MEMORY_E;
+    if (!tmp) 
+		return MEMORY_E;
     if (align)
         tmp += align - hdrSz;
 
@@ -7257,7 +7263,7 @@ static int GetInputData(WOLFSSL *ssl, word32 size)
     int in;
     int inSz;
     int maxLength;
-    int usedLength;
+    int usedLength;	
     int dtlsExtra = 0;
 
 

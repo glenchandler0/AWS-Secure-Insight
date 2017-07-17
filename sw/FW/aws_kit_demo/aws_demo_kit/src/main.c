@@ -80,6 +80,9 @@ int main(void)
 	// Initialize RTT
 	configure_rtt();
 
+	//Try to help with heap size problem
+	wolfSSL_SetAllocators(pvPortMalloc, vPortFree, NULL);
+
 	// Initialize the demo..
 	aws_demo_tasks_init();
 

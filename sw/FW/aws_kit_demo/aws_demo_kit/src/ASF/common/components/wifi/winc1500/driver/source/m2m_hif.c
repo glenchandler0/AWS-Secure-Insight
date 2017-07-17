@@ -572,7 +572,7 @@ sint8 hif_handle_isr(void)
 		{
 			ret = hif_isr();
 			if(ret == M2M_SUCCESS) {
-				/*we will try forever untill we get that interrupt*/
+				/*we will try forever until we get that interrupt*/
 				/*Fail return errors here due to bus errors (reading expected values)*/
 				break;
 			} else {

@@ -58,7 +58,10 @@ extern "C" {
 //! Default port number defined by Amazon.
 #define AWS_IOT_MQTT_PORT						(8883)
 //! Cipher suite for TLS client to negotiate with Amazon server.
-#define AWS_IOT_CIPHER_SPEC						"ECDHE-ECDSA-AES128-GCM-SHA256"
+
+//#define AWS_IOT_CIPHER_SPEC						"ECDHE-ECDSA-AES128-GCM-SHA256"
+#define AWS_IOT_CIPHER_SPEC						"ECDHE-RSA-AES128-GCM-SHA256"
+
 //! The Update topic depending on Thing name.
 #define AWS_IOT_UPDATE_TOPIC					"$aws/things/%s/shadow/update"
 //! The Delta topic depending on Thing name.

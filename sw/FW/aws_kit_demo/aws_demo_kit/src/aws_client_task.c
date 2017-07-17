@@ -124,7 +124,7 @@ int aws_client_init_mqtt_client(t_aws_kit* kit)
 		   If TLS connection fails by AWS IoT during JITR, then return normal failure for the retry. */
 
 		//Check through this call for TLS and JITR to disable 999
-		int m1Port = 61613; //In the aws_client_mqtt_connect() call, m1Port was originally AWS_IOT_MQTT_PORT
+		int m1Port = 61614; //In the aws_client_mqtt_connect() call, m1Port was originally AWS_IOT_MQTT_PORT
 		ret = aws_client_mqtt_connect(kit, (const char *)kit->user.host, m1Port,
 									  AWS_NET_CONN_TIMEOUT_MS, aws_client_net_tls_cb);
 		if (ret != SUCCESS) {
@@ -242,10 +242,7 @@ int aws_client_mqtt_connect(t_aws_kit* kit, const char *host, uint16_t port,
 		
 		wolfSSL_Cleanup();
 	
-//Quick test 999	
-#if 0
 		network_socket_disconnect(kit->socket);
-#endif
 	}
 	
 	return ret;

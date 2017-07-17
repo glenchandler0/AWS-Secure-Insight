@@ -110,7 +110,7 @@ int aws_main_init_kit(t_aws_kit* kit)
 
 		kit->errState = AWS_EX_NONE;
 
-#if 0
+#if 1
 		/* Initialize CryptoAuthLib to communicate with ATECC508A over I2C interface. */
 		cfg_ateccx08a_i2c_default.atcai2c.slave_address = DEVICE_I2C;
 		atcab_init( &cfg_ateccx08a_i2c_default );
