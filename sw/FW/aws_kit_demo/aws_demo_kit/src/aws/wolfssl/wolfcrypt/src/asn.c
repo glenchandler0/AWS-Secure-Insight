@@ -3211,6 +3211,14 @@ int DecodeToKey(DecodedCert* cert, int verify)
     if ( (ret = GetName(cert, SUBJECT)) < 0)
         return ret;
 
+	int m1Loop;
+	uint8_t tempCharBuff[6];
+	for(m1Loop = 0; m1Loop < cert->subjectCNLen; m1Loop++)
+	{
+		sprintf(tempCharBuff, "0x%02x ", cert->subjectCN[m1Loop]);
+		WOLFSSL_MSG(tempCharBuff);
+	}
+	WOLFSSL_MSG("\n");
     WOLFSSL_MSG("Got Subject Name");
 
     if ( (ret = GetKey(cert)) < 0)

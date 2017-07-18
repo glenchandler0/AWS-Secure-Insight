@@ -4714,6 +4714,7 @@ static int DoCertificate(WOLFSSL* ssl, byte* input, word32* inOutIdx,
             WOLFSSL_MSG("Failed to verify CA from chain");
         }
         else {
+			
             WOLFSSL_MSG("Verified CA from chain and already had it");
         }
 
