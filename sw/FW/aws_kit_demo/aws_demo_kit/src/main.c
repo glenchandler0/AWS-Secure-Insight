@@ -63,6 +63,16 @@ static void configure_console(void)
 }
 
 
+void * m1Realloc(void * v, size_t s) {
+	void * temp = pvPortMalloc(s);
+	if (temp) {
+		memcpy(temp, v, s);
+		vPortFree(v);
+	}
+	return temp;
+}
+
+
 int main(void)
 {
 	// Initialize clocks.
@@ -81,7 +91,7 @@ int main(void)
 	configure_rtt();
 
 	//Try to help with heap size problem
-	wolfSSL_SetAllocators(pvPortMalloc, vPortFree, NULL);
+	wolfSSL_SetAllocators(pvPortMalloc, vPortFree, m1Realloc);
 
 	// Initialize the demo..
 	aws_demo_tasks_init();
