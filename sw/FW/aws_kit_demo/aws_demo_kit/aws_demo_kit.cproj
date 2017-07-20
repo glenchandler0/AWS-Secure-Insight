@@ -1944,6 +1944,12 @@
     <Compile Include="src\aws\wolfssl\wolfplugin\atecc508\atecc508cb.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\aws\wolfssl\wolfplugin\atecc508\certs\cert_def_3_device.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\aws\wolfssl\wolfplugin\atecc508\certs\cert_def_3_device.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\aws\wolfssl\wolfplugin\atecc508\cryptoauthlib\lib\atcacert\atcacert.h">
       <SubType>compile</SubType>
     </Compile>

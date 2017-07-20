@@ -71,6 +71,7 @@ extern "C" {
    @{ */
 #define AWS_ROOT_CERT_MAX					(2048)
 #define AWS_CERT_LENGH_MAX					(2048)
+#define AWS_CSR_LENGTH_MAX					(1024)
 #define AWS_WIFI_SSID_MAX					(32)
 #define AWS_WIFI_PSK_MAX					(32)
 #define AWS_HOST_ADDR_MAX					(64)

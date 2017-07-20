@@ -320,8 +320,6 @@ int aws_main_check_kit_state(t_aws_kit* kit)
 
 	//AWS using their byte stream to set variables, a lot of which are set from the GUI, on the cryptoauth
 	//One last check for the cryptoauth to be working happens, then variables are set
-#if 0
-
 		memset(userData, 0x00, sizeof(userData));
 		/* Read a bunch of user data from slot8 of ATECC508A. */
 		ret = atcab_read_bytes_zone(ATCA_ZONE_DATA, TLS_SLOT8_ENC_STORE, 0x00, userData, sizeof(userData));
@@ -356,23 +354,24 @@ int aws_main_check_kit_state(t_aws_kit* kit)
 		memcpy(kit->user.psk, &userData[AWS_USER_DATA_OFFSET_PSK], kit->user.pskLen);
 		memcpy(kit->user.host, &userData[AWS_USER_DATA_OFFSET_HOST], kit->user.hostLen);
 		memcpy(kit->user.thing, &userData[AWS_USER_DATA_OFFSET_THING], kit->user.thingLen);
-	
-#endif
+
 		//kit->user.<value> must be set as a certain string that fits the lengths of parameters
 		//ssid: 32B, psk: 32B, host: 64B, thing: 32B ---Character arrays 999	
-		uint8_t m1Ssid[AWS_WIFI_SSID_MAX] = "mediumone_2.4GHz";
+		uint8_t m1Ssid[AWS_WIFI_SSID_MAX] = "mediumone_2.5GHz";
 		strcpy(kit->user.ssid, m1Ssid);
 		kit->user.ssidLen = 16;
+#if 0
 		uint8_t m1Psk[AWS_WIFI_PSK_MAX] = "6e6496cd";
 		strcpy(kit->user.psk, m1Psk);
 		kit->user.pskLen = 8;
+		uint8_t m1Thing[AWS_THING_NAME_MAX] = "m1Thing";
+		strcpy(kit->user.thing, m1Thing);
+		kit->user.thingLen = 7;
+#endif
 #define M1_HOST "ladder.mediumone.com"
 		uint8_t m1Host[AWS_HOST_ADDR_MAX] = M1_HOST;
 		strcpy(kit->user.host, m1Host);
 		kit->user.hostLen = strlen(M1_HOST);
-		uint8_t m1Thing[AWS_THING_NAME_MAX] = "m1Thing";
-		strcpy(kit->user.thing, m1Thing);
-		kit->user.thingLen = 7;
 
 		/* Set button state with previously saved state to keep it. */
 		for (uint8_t i = 0; i < AWS_KIT_BUTTON_MAX; i++) {
