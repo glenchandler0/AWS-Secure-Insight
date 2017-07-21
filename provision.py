@@ -65,3 +65,4 @@ if __name__ == '__main__':
     csr = get_csr()
     cert = send_csr(csr)
     send_device_cert(cert)
+    send_signer_cert(open('signer.pem', 'r').read())
