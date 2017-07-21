@@ -34,15 +34,18 @@ def send_csr(csr):
     return body['crt']
 
 
-def write_to_atemel(command, data):
+def write_to_atemel(command, data, debug=False):
     """
     data: binary data
     return: binary string converted from hex string response
     """
 
     with serial.Serial(next(x for x in serial.tools.list_ports.comports() if x.pid == 0x2404 and x.vid == 0x3eb).device, 115200) as ser:
-        ser.timeout = 5
-        ser.write('aws:{}({})\n'.format(command, ','.join(''.join('{:02X}'.format(ord(x)) for x in d) for d in data)))
+        ser.timeout = 10
+        tx = 'aws:{}({})\n'.format(command, ','.join(data))
+        if debug:
+            print "Sending: {}\n\n{} bytes: {}".format(tx, len(tx), [ord(x) for x in tx])
+        ser.write(tx)
         msg = ser.read(10*1024)
         if msg[0:2] != '00':
             raise Exception('Atmel command failed: {}'.format(msg))
@@ -54,7 +57,11 @@ def get_csr():
 
 
 def send_device_cert(cert):
-    write_to_atemel('sc', ['\003', cert])
+    write_to_atemel('sc', ['03', cert], True)
+
+
+def send_signer_cert(cert):
+    write_to_atemel('sc', ['01', cert])
 
 
 if __name__ == '__main__':
