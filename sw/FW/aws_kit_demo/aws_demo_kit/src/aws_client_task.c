@@ -110,10 +110,22 @@ int aws_client_init_mqtt_client(t_aws_kit* kit)
 		memset(kit->socket, 0, sizeof(SOCKET));
 		MQTTClientInit(&kit->client, &mqtt_network, AWS_MQTT_CMD_TIMEOUT_MS, kit->buffer.mqttTxBuf, 
 					   sizeof(kit->buffer.mqttTxBuf), kit->buffer.mqttRxBuf, sizeof(kit->buffer.mqttRxBuf));
+
+		//Need to set MQTT username and pass here, as MQTT string. Let it initialize first, then set variables that you need to. 999
+		strcpy(options.username.cstring, "d4JzTtGTSqs/6eqAY8te0B8");
+		strcpy(options.username.lenstring.data, "d4JzTtGTSqs/6eqAY8te0B8");
+		options.username.lenstring.len = 23;
+
+		strcpy(options.password.cstring, "B5OPOBXJZKAPFJQZV5SVADRQGVSWIMJYMM4WKNJYGQ3TAMBQ/glen8716");
+		strcpy(options.password.lenstring.data, "B5OPOBXJZKAPFJQZV5SVADRQGVSWIMJYMM4WKNJYGQ3TAMBQ/glen8716");
+		options.password.lenstring.len = 57;
 					   
 		/* Connect to AWS IoT over TLS handshaking with ECDHE-ECDSA-AES128-GCM-SHA256 cipher suite. 
 		   If TLS connection fails by AWS IoT during JITR, then return normal failure for the retry. */
-		ret = aws_client_mqtt_connect(kit, (const char *)kit->user.host, AWS_IOT_MQTT_PORT,
+
+		//Check through this call for TLS and JITR to disable 999
+		int m1Port = 61614; //In the aws_client_mqtt_connect() call, m1Port was originally AWS_IOT_MQTT_PORT
+		ret = aws_client_mqtt_connect(kit, (const char *)kit->user.host, m1Port,
 									  AWS_NET_CONN_TIMEOUT_MS, aws_client_net_tls_cb);
 		if (ret != SUCCESS) {
 			ret = AWS_E_NET_CONN_FAILURE;

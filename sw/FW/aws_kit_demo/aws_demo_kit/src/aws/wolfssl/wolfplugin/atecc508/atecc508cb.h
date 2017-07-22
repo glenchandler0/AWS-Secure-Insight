@@ -63,7 +63,7 @@ extern "C" {
 /** \name Initial certificate length definition.
    @{ */
 #define DER_CERT_INIT_SIZE						(1024)
-#define PEM_CERT_INIT_SIZE						(1024)
+#define PEM_CERT_INIT_SIZE						(2048)
 #define PEM_CERT_CHAIN_INIT_SIZE				(2048)
 #define ATCERT_PUBKEY_SIZE						(64)
 /** @} */

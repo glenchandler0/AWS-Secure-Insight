@@ -46,10 +46,12 @@
 #include "conf_usb.h"
 #include "cryptoauthlib.h"
 #include "tls/atcatls_cfg.h"
+#include "tls/atcatls.h"
 #include "aws_prov_task.h"
 #include "aws_kit_object.h"
 #include "cert_def_1_signer.h"
 #include "cert_def_2_device.h"
+#include "cert_def_3_device.h"
 
 /** 
  * \brief version of development kit firmware that contains AES132 and SHA204 library.
@@ -1718,6 +1720,22 @@ uint8_t aws_prov_get_cert(char* command, uint8_t* response, uint16_t* response_l
 	return status;
 }
 
+uint8_t aws_prov_generate_csr(uint8_t * response, uint16_t * responseLength) {
+	ATCA_STATUS status;
+	char buf[AWS_CSR_LENGTH_MAX];
+	size_t inout_size = sizeof(buf);
+
+	status = atcatls_create_csr(&g_cert_def_3_device, buf, &inout_size);
+
+	if (status == ATCA_SUCCESS) {
+		*responseLength = inout_size;
+		memcpy(response, buf, inout_size);
+		return KIT_STATUS_SUCCESS;
+	}
+
+	return KIT_STATUS_USB_TX_OVERFLOW;
+}
+
 /**
  * \brief Build 32 bytes hash of TBS portion of the certificate.
  * These 32 bytes digest can be signed by Signer(PKI parent).
@@ -1809,6 +1827,13 @@ uint8_t aws_prov_parse_aws_commands(uint16_t commandLength, uint8_t *command, ui
 	
 	switch (pToken[1]) 
 	{
+		/* "aw[s]:c()" */
+		case 'C':
+		case 'c':
+			status = aws_prov_generate_csr(response, responseLength);
+			if (status == KIT_STATUS_SUCCESS && kit->clientState == CLIENT_STATE_MQTT_WAIT_MESSAGE)
+				kit->noti = NOTI_QUIT_MQTT_CLIENT;
+			break;
 		/* "aw[s]:i(signer public key)" */
 		case 'I':
 		case 'i':
