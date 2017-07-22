@@ -72,4 +72,10 @@ if __name__ == '__main__':
     csr = get_csr()
     cert = send_csr(csr)
     send_device_cert(cert)
-    send_signer_cert(open('signer.pem', 'r').read())
+    open('sent_to_device.pem', 'w').write(cert)
+    #send_signer_cert(open('signer.pem', 'r').read())
+
+    verify_cert = write_to_atemel('g', ['03', '00'])
+    print verify_cert
+    open('received_from_device.pem', 'w').write(verify_cert)
+
