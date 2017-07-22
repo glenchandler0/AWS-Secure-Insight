@@ -226,7 +226,7 @@ int atca_tls_build_signer_cert(t_atcert* cert)
 
 		//If out atcatls_get_cert(). We do not want to try to read from ATECC
 		//So need to present new signer_der certificate, and set size.
-#if 0
+#if 1
 		ret = atcatls_get_cert(&g_cert_def_1_signer, NULL, cert->signer_der, (size_t*)&cert->signer_der_size);
 		if (ret != ATCACERT_E_SUCCESS) BREAK(ret, "Failed: read signer certificate");
 
@@ -272,7 +272,7 @@ int atca_tls_build_device_cert(t_atcert* cert)
 		if (cert->device_der == NULL || cert->device_pem == NULL) BREAK(ret, "Failed: invalid param");
 
 		//Introduce device certificate which is retrieved through server, (call get cert function) then convert to pem to be converted back to der
-#if 0
+#if 1
 		ret = atcatls_get_cert(&g_cert_def_2_device, cert->signer_pubkey, cert->device_der, (size_t*)&cert->device_der_size);
 		if (ret != ATCACERT_E_SUCCESS) BREAK(ret, "Failed: read device certificate");
 #else

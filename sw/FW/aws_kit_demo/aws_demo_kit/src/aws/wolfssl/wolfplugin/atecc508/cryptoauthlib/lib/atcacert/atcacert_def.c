@@ -764,8 +764,16 @@ int atcacert_set_signer_id( const atcacert_def_t* cert_def,
 	if (cert_def == NULL || cert == NULL || signer_id == NULL)
 		return ATCACERT_E_BAD_PARAMS;
 
+// M1 hack for signer id not being part of cert
+#if 0
 	uint8_to_hex(signer_id[0], &hex_str[0]);
 	uint8_to_hex(signer_id[1], &hex_str[2]);
+#else
+	hex_str[0] = ' ';
+	hex_str[1] = 'O';
+	hex_str[2] = 'n';
+	hex_str[3] = 'e';
+#endif
 
     return atcacert_set_cert_element(cert_def, &cert_def->std_cert_elements[STDCERT_SIGNER_ID], cert, cert_size, hex_str, 4);
 }
@@ -810,6 +818,8 @@ int atcacert_get_signer_id( const atcacert_def_t* cert_def,
 	if (ret != ATCACERT_E_SUCCESS)
 		return ret;
 
+// M1 hack for signer id not being part of cert
+#if 0
 	ret = hex_to_uint8(&hex_str[0], &signer_id[0]);
 	if (ret != ATCACERT_E_SUCCESS)
 		return ret;
@@ -817,6 +827,10 @@ int atcacert_get_signer_id( const atcacert_def_t* cert_def,
 	ret = hex_to_uint8(&hex_str[2], &signer_id[1]);
 	if (ret != ATCACERT_E_SUCCESS)
 		return ret;
+#else
+	signer_id[0] = hex_str[0];
+	signer_id[1] = hex_str[1];
+#endif
 
 	return ATCACERT_E_SUCCESS;
 }

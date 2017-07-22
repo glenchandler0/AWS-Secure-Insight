@@ -355,12 +355,12 @@ int aws_main_check_kit_state(t_aws_kit* kit)
 		memcpy(kit->user.host, &userData[AWS_USER_DATA_OFFSET_HOST], kit->user.hostLen);
 		memcpy(kit->user.thing, &userData[AWS_USER_DATA_OFFSET_THING], kit->user.thingLen);
 
+#if 0
 		//kit->user.<value> must be set as a certain string that fits the lengths of parameters
 		//ssid: 32B, psk: 32B, host: 64B, thing: 32B ---Character arrays 999	
-		uint8_t m1Ssid[AWS_WIFI_SSID_MAX] = "mediumone_2.5GHz";
+		uint8_t m1Ssid[AWS_WIFI_SSID_MAX] = "mediumone_2.4GHz";
 		strcpy(kit->user.ssid, m1Ssid);
 		kit->user.ssidLen = 16;
-#if 0
 		uint8_t m1Psk[AWS_WIFI_PSK_MAX] = "6e6496cd";
 		strcpy(kit->user.psk, m1Psk);
 		kit->user.pskLen = 8;
