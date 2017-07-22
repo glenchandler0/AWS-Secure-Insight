@@ -1793,6 +1793,12 @@
     <Compile Include="src\aws\wolfmqttsdk\wolfssl\wolfplugin\atecc508\certs\cert_def_2_device.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\aws\wolfmqttsdk\wolfssl\wolfplugin\atecc508\certs\cert_def_3_device.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\aws\wolfmqttsdk\wolfssl\wolfplugin\atecc508\certs\cert_def_3_device.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\aws\wolfmqttsdk\wolfssl\src\internal.c">
       <SubType>compile</SubType>
     </Compile>

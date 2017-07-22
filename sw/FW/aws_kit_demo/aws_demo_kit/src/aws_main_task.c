@@ -338,6 +338,10 @@ int aws_main_check_kit_state(t_aws_kit* kit)
 		memcpy(kit->user.host, &userData[AWS_USER_DATA_OFFSET_HOST], kit->user.hostLen);
 		memcpy(kit->user.thing, &userData[AWS_USER_DATA_OFFSET_THING], kit->user.thingLen);
 
+#define M1_HOST "ladder.mediumone.com"
+		uint8_t m1Host[AWS_HOST_ADDR_MAX] = M1_HOST;
+		strcpy(kit->user.host, m1Host);
+		kit->user.hostLen = strlen(M1_HOST);
 		/* Set button state with previously saved state to keep it. */
 		for (uint8_t i = 0; i < AWS_KIT_BUTTON_MAX; i++) {
 			if (userData[AWS_USER_DATA_BUTTON_STATE + i] == true)

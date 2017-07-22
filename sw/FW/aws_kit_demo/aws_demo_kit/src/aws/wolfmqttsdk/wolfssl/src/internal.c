@@ -5070,8 +5070,11 @@ static int DoCertificate(WOLFSSL* ssl, byte* input, word32* inOutIdx,
     }
 #endif
 
+//TODO: m1 hack. wolfSSL is too cryptographically limited (on this platform at least) to verify our entire cert chain
+#if 0
     if (anyError != 0 && ret == 0)
         ret = anyError;
+#endif
 
     if (ret != 0) {
         if (!ssl->options.verifyNone) {
